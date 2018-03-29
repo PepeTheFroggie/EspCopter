@@ -22,6 +22,8 @@ static int32_t errorGyroI[3] = {0,0,0};
     
 #define GYRO_I_MAX 50
 
+# if defined STD
+
 void pid()
 {
   uint8_t axis;
@@ -88,6 +90,71 @@ void pid()
         //axisPID[axis] =  PTerm + DTerm;
       }
 }
+
+#else
+
+void pid()
+{
+  uint8_t axis;
+    for(axis=0;axis<3;axis++) 
+    {
+      //-----Get the desired angle rate depending on flight mode
+      if ((f.ANGLE_MODE || f.HORIZON_MODE) && axis<2 ) 
+      { // MODE relying on ACC
+        // calculate error and limit the angle to 50 degrees max inclination
+        errorAngle = constrain((rcCommand[axis]<<1),-500,+500) - angle[axis] + conf.angleTrim[axis]; //16 bits is ok here
+        PTermACC = ((int32_t)errorAngle*conf.P8[PIDLEVEL])>>7;                          // 32 bits is needed for calculation: errorAngle*P8[PIDLEVEL] could exceed 32768   16 bits is ok for result
+        PTermACC = constrain(PTermACC,-conf.D8[PIDLEVEL]*5,+conf.D8[PIDLEVEL]*5);
+        
+        errorAngleI[axis]     = constrain(errorAngleI[axis]+errorAngle,-10000,+10000);    // WindUp     //16 bits is ok here
+        ITermACC  = ((int32_t)errorAngleI[axis]*conf.I8[PIDLEVEL])>>12;            // 32 bits is needed for calculation:10000*I8 could exceed 32768   16 bits is ok for result
+      }
+      if ( !f.ANGLE_MODE || f.HORIZON_MODE || axis == 2 ) 
+      { // MODE relying on GYRO or YAW axis
+        error = ((int32_t)rcCommand[axis]<<6)/conf.P8[axis] ; // 32 bits is needed for calculation
+        error -= gyroData[axis]/4;  // error = rcCommand - gyro
+        
+        PTermGYRO = rcCommand[axis];
+      
+        errorGyroI[axis]  = constrain(errorGyroI[axis]+error,-16000,+16000);         // WindUp   16 bits is ok here
+        if (abs(gyroData[axis]>>2)>640) errorGyroI[axis] = 0;
+        ITermGYRO = ((errorGyroI[axis]>>7)*conf.I8[axis])>>6;                        // 16 bits is ok here 16000/125 = 128 ; 128*250 = 32000
+      }
+      
+      if (axis<2)
+      {
+        if (flightmode == STABI)  
+        {
+          PTerm = PTermACC;
+          ITerm = ITermACC;
+        } 
+        else // Acro
+        {
+          PTerm = PTermGYRO;
+          ITerm = ITermGYRO;
+        }
+      }
+      else // yaw axis
+      {
+        PTerm = PTermGYRO;
+        ITerm = ITermGYRO;
+      }
+
+      PTerm -= ((int32_t)gyroData[axis]*dynP8[axis])>>8; // 32 bits is needed for calculation   
+
+      delta          = gyroData[axis] - lastGyro[axis];  // 16 bits is ok here, the dif between 2 consecutive gyro reads is limited to 800
+      lastGyro[axis] = gyroData[axis];
+      deltaSum       = delta1[axis]+delta2[axis]+delta;
+      delta2[axis]   = delta1[axis];
+      delta1[axis]   = delta;
+ 
+      DTerm = ((int32_t)deltaSum*dynD8[axis])>>7;        // 32 bits is needed for calculation
+                      
+      axisPID[axis] =  PTerm + ITerm - DTerm;
+    }
+}
+
+#endif
 
 void zeroGyroI()
 {
