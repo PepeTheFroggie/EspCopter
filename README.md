@@ -23,9 +23,7 @@ The PID for level (acc) and gyro can be adjusted individually.
 
 To calibrate the ACC enter 'A' in the serial console.
 
-[Testflight](https://youtu.be/OhVVPzNwx6M)
-
-[Telemetry](https://youtu.be/0AWHVxgIqno)
-
+[Testflight](https://youtu.be/OhVVPzNwx6M)   
+[Telemetry](https://youtu.be/0AWHVxgIqno)   
 [Wiring](Wiring.png)
 
