@@ -8,8 +8,6 @@ The output to esc's is wired to the serial output pin #2 of the esp. Name is D4,
 Normal PWM output: (#define PWMOUT)
 The output to esc's is wired to the pins 14, 12, 13, 15. Refresh rate is about 6ms, pulses from 1ms to 2ms.
 
-6050 wiring: SCL to D1, SDA to D2, VCC to 3.3V, GND to GND.
- 
 RC pulse input sequence is adaptable: 
 
 * define ROL 0
@@ -24,6 +22,8 @@ The PID for level (acc) and gyro can be adjusted individually.
 
 To calibrate the ACC enter 'A' in the serial console.
 
+6050 wiring: SCL to D1, SDA to D2, VCC to 3.3V, GND to GND.
+ 
 ![wiring.png](Wiring.png "Wiring")
 
 [Testflight](https://youtu.be/OhVVPzNwx6M)   
