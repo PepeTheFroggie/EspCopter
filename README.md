@@ -22,7 +22,12 @@ The PID for level (acc) and gyro can be adjusted individually.
 
 To calibrate the ACC enter 'A' in the serial console.
 
-6050 wiring: SCL to D1, SDA to D2, VCC to 3.3V, GND to GND.
+6050 wiring: 
+
+* SCL to D1 
+* SDA to D2 
+* VCC to 3.3V 
+* GND to GND.
  
 ![wiring.png](Wiring.png "Wiring")
 
