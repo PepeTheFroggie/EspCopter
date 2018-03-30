@@ -10,13 +10,13 @@ The output to esc's is wired to the pins 14, 12, 13, 15. Refresh rate is about 6
 
 6050 wiring: SCL to D1, SDA to D2, VCC to 3.3V, GND to GND.
  
-RC pulse input sequence is adaptable:
+RC pulse input sequence is adaptable: 
 
- .define ROL 0
- .define PIT 1
- .define THR 2
- .define RUD 3
- .define AU1 4
+* define ROL 0
+* define PIT 1
+* define THR 2
+* define RUD 3
+* define AU1 4
 
 The copter will only arm after 1 second zero throttle. The copter will shut down motors RC data fails for more than 100ms.
 
