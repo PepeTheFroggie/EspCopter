@@ -45,7 +45,7 @@ enum ang { ROLL,PITCH,YAW };
 
 static int16_t gyroADC[3];
 static int16_t accADC[3];
-static float gyroData[3];
+static int16_t gyroData[3];
 static float angle[2]    = {0,0};  
 extern int calibratingA;
 
@@ -60,6 +60,7 @@ static int16_t rcCommand[] = {0,0,0};
 #define STABI    1
 #define RTH      2
 static int8_t flightmode;
+static int8_t oldflightmode;
 
 boolean armed = false;
 uint8_t armct = 0;
@@ -105,8 +106,14 @@ void loop()
     recv = false;    
     buf_to_rc();
 
-    if (rcValue[AU1] < 1300) flightmode = GYRO;
-    else                     flightmode = STABI;    
+    if      (rcValue[AU1] < 1300) flightmode = GYRO;
+    else if (rcValue[AU1] > 1700) flightmode = RTH;
+    else                          flightmode = STABI;   
+    if (oldflightmode != flightmode)
+    {
+      zeroGyroI();
+      flightmode = oldflightmode;
+    }
         
     if (armed) 
     {

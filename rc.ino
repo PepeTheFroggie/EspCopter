@@ -37,7 +37,7 @@ void mix()
   //Serial.print(servo[3]); Serial.print("  ");  
 }
 
-#define PWMOUT
+//#define PWMOUT
 
 #if defined PWMOUT //----------------------------------------------
 

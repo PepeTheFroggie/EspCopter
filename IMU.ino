@@ -62,7 +62,7 @@ void getEstimatedAttitude()
   {
     deltaGyroAngle[axis] = (float)gyroADC[axis] * scale;
     accData[axis]  = (float)accADC[axis];
-    gyroData[axis] = (float)gyroADC[axis];
+    gyroData[axis] = gyroADC[axis];
   }
   
   rotateV(&EstG.V,deltaGyroAngle); 
