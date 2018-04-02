@@ -23,6 +23,7 @@ static int32_t errorGyroI[3] = {0,0,0};
     
 #define GYRO_I_MAX 50
 
+#define STD
 # if defined STD
 
 void pid()

@@ -112,7 +112,7 @@ void loop()
     if (oldflightmode != flightmode)
     {
       zeroGyroI();
-      flightmode = oldflightmode;
+      oldflightmode = flightmode;
     }
         
     if (armed) 
