@@ -9,6 +9,8 @@ extern "C" {
 #include "RC.h"
 
 #define WIFI_CHANNEL 4
+//#define PWMOUT  // normal esc, uncomment for serial esc
+//#define ARMSWITCH
 
 volatile boolean recv;
 volatile int peernum = 0;
@@ -54,6 +56,7 @@ extern int calibratingA;
 #define THR 2
 #define RUD 3
 #define AU1 4
+#define AU2 5
 static int16_t rcCommand[] = {0,0,0};
 
 #define GYRO     0
@@ -114,19 +117,37 @@ void loop()
       zeroGyroI();
       oldflightmode = flightmode;
     }
-        
-    if (armed) 
-    {
-      rcValue[THR]    -= THRCORR;
-      rcCommand[ROLL]  = rcValue[ROL] - MIDRUD;
-      rcCommand[PITCH] = rcValue[PIT] - MIDRUD;
-      rcCommand[YAW]   = rcValue[RUD] - MIDRUD;
-    }  
-    else
-    {  
-      if (rcValue[THR] < MINTHROTTLE) armct++;
-      if (armct >= 25) armed = true;
-    } 
+
+    #if defined (ARMSWITCH)
+      if (armed) 
+      {
+        if (rcValue[AU2] <= 1400) { armed = false; armct = 0; }
+        rcValue[THR]    -= THRCORR;
+        rcCommand[ROLL]  = rcValue[ROL] - MIDRUD;
+        rcCommand[PITCH] = rcValue[PIT] - MIDRUD;
+        rcCommand[YAW]   = rcValue[RUD] - MIDRUD;
+      }  
+      else if (rcValue[AU2] >= 1600)
+      {  
+        if (rcValue[THR] < MINTHROTTLE) armct++;
+        if (armct >= 25) armed = true;
+      } 
+    #else
+      if (armed) 
+      {
+        rcValue[THR]    -= THRCORR;
+        rcCommand[ROLL]  = rcValue[ROL] - MIDRUD;
+        rcCommand[PITCH] = rcValue[PIT] - MIDRUD;
+        rcCommand[YAW]   = rcValue[RUD] - MIDRUD;
+      }  
+      else
+      {  
+        if (rcValue[THR] < MINTHROTTLE) armct++;
+        if (armct >= 25) armed = true;
+      }
+    #endif 
+    
+    //Serial.println(rcValue[AU2]    );
     //Serial.print(rcValue[THR]    ); Serial.print("  ");
     //Serial.print(rcCommand[ROLL] ); Serial.print("  ");
     //Serial.print(rcCommand[PITCH]); Serial.print("  ");
@@ -138,11 +159,6 @@ void loop()
 
     if (peernum > 0) 
     {
-      //String telem = String((int)angle[0]) + "  " + String((int)angle[1]);
-      //Serial.print(sizeof(telem));
-      //Serial.print("  ");
-      //Serial.println(telem);
-
       //t_angle();
       t_gyro();
       //t_acc();

@@ -24,6 +24,10 @@ void mix()
     servo[1] = constrain(rcValue[THR] - axisPID[ROLL] - axisPID[PITCH] + axisPID[YAW],1000,2000);
     servo[2] = constrain(rcValue[THR] + axisPID[ROLL] + axisPID[PITCH] + axisPID[YAW],1000,2000);
     servo[3] = constrain(rcValue[THR] + axisPID[ROLL] - axisPID[PITCH] - axisPID[YAW],1000,2000);
+    //servo[0] = constrain(rcValue[THR],MINTHROTTLE,2000);
+    //servo[1] = constrain(rcValue[THR],MINTHROTTLE,2000);
+    //servo[2] = constrain(rcValue[THR],MINTHROTTLE,2000);
+    //servo[3] = constrain(rcValue[THR],MINTHROTTLE,2000);
   }
   else 
   { 
@@ -36,8 +40,6 @@ void mix()
   //Serial.print(servo[2]); Serial.print("  ");
   //Serial.print(servo[3]); Serial.print("  ");  
 }
-
-//#define PWMOUT
 
 #if defined PWMOUT //----------------------------------------------
 
