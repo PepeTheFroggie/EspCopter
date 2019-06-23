@@ -24,14 +24,9 @@ void mix()
     servo[1] = constrain(rcValue[THR] - axisPID[ROLL] - axisPID[PITCH] + axisPID[YAW],1000,2000);
     servo[2] = constrain(rcValue[THR] + axisPID[ROLL] + axisPID[PITCH] + axisPID[YAW],1000,2000);
     servo[3] = constrain(rcValue[THR] + axisPID[ROLL] - axisPID[PITCH] - axisPID[YAW],1000,2000);
-    //servo[0] = constrain(rcValue[THR],MINTHROTTLE,2000);
-    //servo[1] = constrain(rcValue[THR],MINTHROTTLE,2000);
-    //servo[2] = constrain(rcValue[THR],MINTHROTTLE,2000);
-    //servo[3] = constrain(rcValue[THR],MINTHROTTLE,2000);
   }
   else 
   { 
-    zeroGyroI();
     axisPID[0] = 0; axisPID[1] = 0; axisPID[2] = 0;
     servo[0] = 1000; servo[1] = 1000; servo[2] = 1000; servo[3] = 1000;
   }
