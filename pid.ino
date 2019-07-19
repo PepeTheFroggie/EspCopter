@@ -1,16 +1,13 @@
 
-float yawRate = 5.0;
+float yawRate = 6.0;
 float rollPitchRate = 5.0;
 
 float P_PID = 0.15;    // P8
 float I_PID = 0.00;    // I8
 float D_PID = 0.08;    // D8
 
-//0.8 0.01 0.5 a little shaky, on the edge
-//0.8 0.01 0.9 a little shaky, good to fly
-
-float P_Level_PID = 0.75;   // P8
-float I_Level_PID = 0.03;   // I8
+float P_Level_PID = 0.35;   // P8
+float I_Level_PID = 0.00;   // I8
 float D_Level_PID = 0.10;   // D8
 
 static int16_t axisPID[3];
@@ -82,7 +79,7 @@ void pid()
           else // STABI mode
           {
             // calculate error and limit the angle to 45 degrees max inclination
-            errorAngle = constrain(rcCommand[axis]/2,-225,+225) - angle[axis]; //16 bits is ok here           
+            errorAngle = constrain(rcCommand[axis],-450,+450) - angle[axis]; //16 bits is ok here           
             //it's the ANGLE mode - control is angle based, so control loop is needed
             //-----calculate P-term
             PTerm = errorAngle * P_Level_PID;

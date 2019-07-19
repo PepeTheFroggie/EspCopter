@@ -106,10 +106,9 @@ void ACC_Common()
   accADC[2] -=  accZero[2];
 }
 
-uint8_t rawADC[6];
-
 void Gyro_getADC () 
 {
+  uint8_t rawADC[6];
   i2cRead(MPU6050_ADDRESS, 0x43,6,rawADC);
   GYRO_ORIENTATION( ((rawADC[0]<<8) | rawADC[1]) , 
                     ((rawADC[2]<<8) | rawADC[3]) ,
@@ -119,6 +118,7 @@ void Gyro_getADC ()
 
 void ACC_getADC () 
 {
+  uint8_t rawADC[6];
   i2cRead(MPU6050_ADDRESS, 0x3B,6,rawADC);
   ACC_ORIENTATION( ((rawADC[0]<<8) | rawADC[1]) ,
                    ((rawADC[2]<<8) | rawADC[3]) ,

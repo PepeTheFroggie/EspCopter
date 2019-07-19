@@ -28,5 +28,3 @@ RCdataTY RCdata;
 
 int16_t rcValue[CHANNELS];  // in us, center = 1500
 uint8_t seqno;
-
-

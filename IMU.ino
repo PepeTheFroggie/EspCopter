@@ -41,7 +41,20 @@ void rotateV(struct fp_vector *v,float* delta)
   v->Y += delta[PITCH] * v_tmp.Z + delta[YAW]   * v_tmp.X;
 }
 
-static t_fp_vector EstG = { 0.0, 0.0, (float)ACCRESO };
+void normalizeV(struct fp_vector *vec)
+{
+    float length;
+    length = sqrtf(vec->X * vec->X + vec->Y * vec->Y + vec->Z * vec->Z);
+    if (length != 0) 
+    {
+        vec->X /= length;
+        vec->Y /= length;
+        vec->Z /= length;
+    }
+}
+
+static t_fp_vector EstG = { 0.0, 0.0, (float)ACCRESO }; // x,y,z
+static t_fp_vector EstM = { 0.0, 1.0, 0.0 }; // x,y,z
 static float accData[3]  = {0,0,0};
 
 uint32_t  tnow; 
@@ -64,20 +77,33 @@ void getEstimatedAttitude()
     accData[axis]  = (float)accADC[axis];
     gyroData[axis] = gyroADC[axis];
   }
-  
+
+  // AZ, EL
   rotateV(&EstG.V,deltaGyroAngle); 
   
   // Apply complimentary filter (Gyro drift correction)
-  for (axis = 0; axis < 3; axis++) 
-    EstG.A[axis] = (EstG.A[axis] * GYR_CMPF_FACTOR + accData[axis]) * INV_GYR_CMPF_FACTOR;
+  for (axis = 0; axis < 3; axis++) EstG.A[axis] = (EstG.A[axis] * GYR_CMPF_FACTOR + accData[axis]) * INV_GYR_CMPF_FACTOR;
   
   // Attitude of the estimated vector
-  float sqGZ = sq(EstG.V.Z);
-  float sqGX = sq(EstG.V.X);
-  float sqGX_sqGZ = sqGX + sqGZ;
+  float sqGX_sqGZ = sq(EstG.V.X) + sq(EstG.V.Z);
   float invmagXZ  = InvSqrt(sqGX_sqGZ);
-  angle[ROLL]  = 572.95f * atan2(EstG.V.X , EstG.V.Z);
-  angle[PITCH] = 572.95f * atan2(EstG.V.Y , invmagXZ*sqGX_sqGZ);
+  anglerad[ROLL]  = atan2(EstG.V.X , EstG.V.Z);
+  anglerad[PITCH] = atan2(EstG.V.Y , invmagXZ*sqGX_sqGZ);
+  angle[ROLL]  = 572.95f * anglerad[ROLL];
+  angle[PITCH] = 572.95f * anglerad[PITCH];
+
+  // Yaw
+  rotateV(&EstM.V, deltaGyroAngle);
+  #if MAG
+    for (axis = 0; axis < 3; axis++)
+      EstM.A[axis]  += (imu.magADC[axis] - EstM.A[2*axis+1])<<(16-GYR_CMPFM_FACTOR);
+  #else
+    normalizeV(&EstM.V);
+  #endif
+
+  float invG = InvSqrt(sqGX_sqGZ + EstG.V.Y * EstG.V.Y);
+  anglerad[YAW] = atan2(EstM.V.Z * EstG.V.X - EstM.V.X * EstG.V.Z,
+                        (EstM.V.Y * sqGX_sqGZ - (EstM.V.X * EstG.V.X + EstM.V.Z * EstG.V.Z) * EstG.V.Y)*invG );
+  angle[YAW] = 572.95f * anglerad[YAW];
+
 }
-
-

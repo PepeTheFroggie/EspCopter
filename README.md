@@ -31,6 +31,8 @@ To calibrate the ACC enter 'A' in the serial console.
  
 ![wiring.png](Wiring.png "Wiring")
 
+![DSC02280.jpg](DSC02280.jpg "Testcopter")
+
 [Testflight](https://youtu.be/OhVVPzNwx6M)   
 [Telemetry](https://youtu.be/0AWHVxgIqno)   
 

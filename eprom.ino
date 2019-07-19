@@ -80,5 +80,6 @@ void PID_Store()
   write_float(30,P_Level_PID);
   write_float(34,I_Level_PID);
   write_float(38,D_Level_PID);
+  EEPROM.write(62, 0xAA);
   EEPROM.commit();
 }
