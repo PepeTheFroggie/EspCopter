@@ -40,7 +40,7 @@ void mix()
 #define pwmpin4 15
 
 uint8_t  pwmActChan = 0;
-uint32_t pwmServo[4] = {80000,80000,80000,80000};
+uint32_t pwmServo[4] = {80000,80000,80000,80000}; // use 160000 for 16mhz
 uint32_t next;
 
 void inline PWM_ISR(void)
@@ -72,6 +72,7 @@ void inline PWM_ISR(void)
   }
 }
 
+// factor 80 is for 80mhz, use 160 for 160mhz.
 void writeServo() 
 {
   pwmServo[0] = servo[0]*80;  
