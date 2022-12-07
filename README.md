@@ -38,6 +38,7 @@ Data display over serial console (use arduino plot function)
 * 5 - Cycle time, RC time
 
 Be sure you do acc_calib and write default params to eeprom before taking off! 
+Use serial version or add patch in rc.ino for pwm version!
 Acc_calib is done by placing the copter on a level surface and press A on the serial console.
 Default PID are written by press P on the serial console. Read them with R.
 
