@@ -7,7 +7,7 @@ The output to esc's is wired to the serial output pin #2 of the esp. Name is D4,
 
 Normal PWM output: (#define PWMOUT)
 The output to esc's is wired to the pins 14, 12, 13, 15. Refresh rate is about 6ms, pulses from 1ms to 2ms.
-Important! For normal PWM use 80mhz cpu frequency for ESP8266.
+Important! For normal PWM use 80mhz cpu frequency for ESP8266. Use serial mode to write internal eeprom lik eacc calib, it pwm mode it will crash.
 
 RC pulse input sequence is adaptable, default is orangerx sequence: 
 * define ROL 0
