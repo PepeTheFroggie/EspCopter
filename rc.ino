@@ -94,6 +94,22 @@ void initServo()
   interrupts();
 }
 
+/*
+// use those functions before/after writing to eeprom
+// in acc calib and pid store. Or it will crash.
+// dunno why, some esp8266 internal problem
+void resumeServo()
+{
+  timer0_attachInterrupt(PWM_ISR);
+  next=ESP.getCycleCount()+F_CPU/100;
+  timer0_write(next);
+}
+void stopServo()
+{
+  timer0_detachInterrupt();
+}
+*/
+
 #else //----------------------------------------------
 
 uint8_t outmsg[5];
